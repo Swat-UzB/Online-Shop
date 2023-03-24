@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -49,13 +50,20 @@ fun ProfileScreen(
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(painter = painterResource(id = R.drawable.avatar), contentDescription = null)
+        Image(
+            painterResource(id = R.drawable.avatar),
+            null,
+            Modifier
+                .clip(CircleShape)
+                .size(56.dp),
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.Center
+        )
         CommonMontserratText(
             text = R.string.change_photo, fontWeight = FontWeight.W500, fontSize = 10.sp,
             color = colorResource(id = R.color.text_gray)
         )
         CommonMontserratText(text = R.string.owner_name, fontWeight = FontWeight.W700)
-
         Button(
             onClick = { }, shape = MaterialTheme.shapes.large, modifier = Modifier
                 .fillMaxWidth()
@@ -86,25 +94,18 @@ fun ProfileScreen(
         ProfileCategory(label = R.string.trade_history)
         ProfileCategory(icon = R.drawable.restore_purchase, label = R.string.restore_purchase)
         ProfileCategory(icon = R.drawable.help, label = R.string.help, isArrowExist = false)
-        ProfileCategory(
-            icon = R.drawable.log_out,
-            label = R.string.log_out,
-            isArrowExist = false,
-            modifier = Modifier.clickable {
-
-                rootNavController.navigate(Graph.ROOT) {
-                    popUpTo(Graph.ROOT)
-                }
-                viewModel.removeUserName()
-            })
+        ProfileCategory(R.drawable.log_out, R.string.log_out, Modifier.clickable {
+            rootNavController.navigate(Graph.ROOT) { popUpTo(Graph.ROOT) }
+            viewModel.removeUserName()
+        }, false)
     }
 }
 
 @Composable
 fun ProfileCategory(
+    @DrawableRes icon: Int = R.drawable.credit_card,
     @StringRes label: Int,
     modifier: Modifier = Modifier,
-    @DrawableRes icon: Int = R.drawable.credit_card,
     isArrowExist: Boolean = true,
     isExistPrice: Boolean = false,
 ) {

@@ -113,9 +113,9 @@ fun CustomTextField(
 
 @Composable
 fun EditField(
-    @StringRes placeholder: Int,
     value: String,
     onValueChange: (String) -> Unit,
+    @StringRes placeholder: Int,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
     modifier: Modifier = Modifier,

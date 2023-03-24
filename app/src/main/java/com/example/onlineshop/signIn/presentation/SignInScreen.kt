@@ -47,9 +47,9 @@ import kotlinx.coroutines.launch
 fun SignInMainScreen(
     navController: NavController,
     viewModel: SignInViewModel = hiltViewModel(),
-    scope: CoroutineScope = rememberCoroutineScope()
 
-) {
+
+    ) {
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -60,30 +60,42 @@ fun SignInMainScreen(
         if (!isValidEmail) R.string.not_valid_error_msg
         else R.string.email_already_exist
     val addUser = {
-        scope.launch {
-            viewModel.isEmailExist(
-                User(firstName = firstName, lastName = lastName, email = email)
-            )
-        }
+        viewModel.isEmailExist(
+            User(firstName = firstName, lastName = lastName, email = email)
+        )
     }
     val focusManger = LocalFocusManager.current
-    if (state.isUserCreated) {
-        navController.popBackStack()
-        navController.navigate(Graph.MAIN) }
-    Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+    LaunchedEffect(key1 = state.isUserCreated) {
+        if (state.isUserCreated) {
+            navController.popBackStack()
+            navController.navigate(Graph.MAIN)
+        }
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(space = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         Spacer(modifier = Modifier.fillMaxHeight(0.2f))
-        Text(text = stringResource(R.string.sign_in), fontWeight = FontWeight.W600, style = MaterialTheme.typography.h1)
+        Text(
+            text = stringResource(R.string.sign_in),
+            fontWeight = FontWeight.W600,
+            style = MaterialTheme.typography.h1
+        )
         Spacer(modifier = Modifier.height(32.dp))
-        EditField(placeholder = R.string.first_name, value = firstName, onValueChange = { firstName = it },
+        EditField(
+            placeholder = R.string.first_name,
+            value = firstName,
+            onValueChange = { firstName = it },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             keyboardActions = KeyboardActions(onNext = { focusManger.moveFocus(FocusDirection.Down) })
         )
 
-        EditField(placeholder = R.string.last_name, value = lastName, onValueChange = { lastName = it },
+        EditField(
+            placeholder = R.string.last_name, value = lastName, onValueChange = { lastName = it },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             keyboardActions = KeyboardActions(onNext = { focusManger.moveFocus(FocusDirection.Down) })
         )
@@ -95,7 +107,7 @@ fun SignInMainScreen(
             errorMsg = errorMsg,
             onValueChange = {
                 email = it
-                scope.launch { viewModel.disableEmailExistError() }
+                viewModel.disableEmailExistError()
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
@@ -107,7 +119,10 @@ fun SignInMainScreen(
             })
         )
 
-        CommonButton(enabled = isAllFieldsFilled, butText = R.string.sign_in, onClick = { addUser() })
+        CommonButton(
+            enabled = isAllFieldsFilled,
+            butText = R.string.sign_in,
+            onClick = { addUser() })
 
         ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
             val (already, log_in) = createRefs()

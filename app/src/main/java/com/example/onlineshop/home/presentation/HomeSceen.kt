@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -183,8 +184,11 @@ fun TopBar(title: String) {
                 Image(
                     painterResource(id = R.drawable.avatar),
                     contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center,
                     modifier = Modifier
-                        .padding(top = 4.dp, bottom = 4.dp, end = 48.dp)
+                        .padding(end = 48.dp)
+                        .size(56.dp)
                         .clip(CircleShape)
                         .align(Alignment.CenterVertically)
                 )

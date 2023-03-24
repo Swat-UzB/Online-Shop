@@ -61,35 +61,30 @@ fun Page1MainScreen(
         verticalArrangement = Arrangement.spacedBy(space = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            modifier = Modifier
+        Row(modifier = Modifier
                 .fillMaxSize()
                 .padding(end = 36.dp),
             horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             CommonPoppinsText(
-                text = stringResource(id = R.string.location),
+                stringResource(id = R.string.location),
                 fontWeight = FontWeight.W400,
                 fontSize = 10.sp
             )
             Spacer(modifier = Modifier.width(2.dp))
             Image(Icons.Default.KeyboardArrowDown, contentDescription = null)
         }
-        EditField(
-            value = search,
-            onValueChange = { search = it },
-            placeholder = R.string.search_placeholder,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text, imeAction = ImeAction.Search
-            ),
+        EditField(search, { search = it }, R.string.search_placeholder,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(onSearch = { focusManger.clearFocus() }),
             trailingIcon = {
                 IconButton(onClick = {
                     if (search.isNotBlank()) {
                         search = ""
                     }
-                }) {
+                })
+                {
                     if (search.isBlank()) {
                         Icon(
                             Icons.Default.Search,
@@ -103,46 +98,26 @@ fun Page1MainScreen(
                     }
                 }
             },
-            colors = TextFieldDefaults.textFieldColors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                backgroundColor = Color.LightGray.copy(alpha = 0.2f)
-            ),
-            modifier = Modifier.padding(horizontal = 32.dp)
-        )
-        Row(
-            modifier = Modifier.horizontalScroll(rememberScrollState()),
+            colors = TextFieldDefaults.textFieldColors(focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent, disabledIndicatorColor = Color.Transparent,
+                backgroundColor = Color.LightGray.copy(alpha = 0.2f)),
+            modifier = Modifier.padding(horizontal = 32.dp))
+        Row(modifier = Modifier.horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Category(icon = R.drawable.iphone_3, label = R.string.phones)
+        ) { Category(icon = R.drawable.iphone_3, label = R.string.phones)
             Category(icon = R.drawable.headphone_2, label = R.string.headphones)
             Category(icon = R.drawable.games, label = R.string.games)
             Category(icon = R.drawable.cars_1, label = R.string.cars)
             Category(icon = R.drawable.furniture_5, label = R.string.furniture)
-            Category(icon = R.drawable.kids_4, label = R.string.kids)
-        }
+            Category(icon = R.drawable.kids_4, label = R.string.kids) }
+
         Spacer(modifier = Modifier.height(16.dp))
         ListName(listName = R.string.latest)
-        LazyRow {
-            items(state.latestList) {
-                LatestItem(
-                    it
-                )
-            }
-        }
+        LazyRow { items(state.latestList) { LatestItem(it) } }
         ListName(listName = R.string.flash_sale)
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            items(state.flashSaleList) {
-                FlashSaleItem(
-                    it
-                )
-            }
-        }
+        LazyRow { items(state.flashSaleList) { FlashSaleItem(it) } }
         ListName(listName = R.string.brands)
-
     }
-
 }
 
 @Preview(showBackground = true)
@@ -203,7 +178,8 @@ fun LatestItem(
                 .padding(8.dp)
         ) {
             Surface(
-                color = colorResource(id = R.color.category_back_color).copy(alpha = 0.85f), shape = MaterialTheme.shapes.large
+                color = colorResource(id = R.color.category_back_color).copy(alpha = 0.85f),
+                shape = MaterialTheme.shapes.large
             ) {
                 CommonPoppinsText(
                     fontSize = 8.sp,
@@ -272,7 +248,7 @@ fun FlashSaleItem(
                 color = Color.White,
                 fontWeight = FontWeight.W600,
                 fontSize = 10.sp,
-                modifier = Modifier.padding(8.dp,2.dp)
+                modifier = Modifier.padding(8.dp, 2.dp)
             )
         }
         Column(
