@@ -2,12 +2,16 @@ package com.example.onlineshop.common.presentation.graphs
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.onlineshop.R
 import com.example.onlineshop.detail.Page2MainScreen
+import com.example.onlineshop.home.presentation.HomeViewModel
 import com.example.onlineshop.home.presentation.Page1MainScreen
 import com.example.onlineshop.profile.ProfileScreen
 
@@ -19,25 +23,29 @@ import com.example.onlineshop.profile.ProfileScreen
 
 @Composable
 fun MainGraph(
-    goToSignIn: () -> Unit,
+    rootNavController:NavHostController,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    NavHost(
+            NavHost(
         navController = navController,
         route = Graph.MAIN,
         startDestination = BottomBarScreen.Page1Screen.route,
         modifier = modifier
     ) {
         composable(route = BottomBarScreen.Page1Screen.route) {
-            Page1MainScreen()
+            val viewModel: HomeViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsState()
+            Page1MainScreen(state)
         }
+
         composable(route = BottomBarScreen.Page2Screen.route) {
             Page2MainScreen()
         }
         composable(route = BottomBarScreen.ProfileScreen.route) {
-            ProfileScreen(goToSignIn)
+            ProfileScreen(rootNavController)
         }
+
     }
 }
 

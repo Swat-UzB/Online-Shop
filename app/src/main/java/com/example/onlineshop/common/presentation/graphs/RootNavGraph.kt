@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.onlineshop.home.presentation.HomeScreen
 
 /**
@@ -21,9 +20,7 @@ fun RootNavigationGraph(navHostController: NavHostController) {
         authNavGraph(navHostController)
 
         composable(route = Graph.MAIN) {
-            HomeScreen(
-                goToSignIn = { navHostController.navigate(Graph.ROOT) { popUpTo(Graph.ROOT) } },
-            )
+            HomeScreen(navHostController)
         }
     }
 }

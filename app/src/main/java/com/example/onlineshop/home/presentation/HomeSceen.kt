@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -37,19 +38,27 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun HomeScreen(
-    goToSignIn: () -> Unit,
+    rootNavController: NavHostController,
     navController: NavHostController = rememberNavController(),
 ) {
     var title by remember { mutableStateOf("") }
     val systemUiController = rememberSystemUiController()
     val scaffoldState = rememberScaffoldState()
-    SideEffect { systemUiController.setNavigationBarColor(color = Color.White, darkIcons = false) }
-
+    SideEffect {
+        systemUiController.setNavigationBarColor(
+            color = Color.White,
+            darkIcons = false
+        )
+    }
     Scaffold(scaffoldState = scaffoldState,
         bottomBar = { BottomNav(navControl = navController, title = { title = it }) },
         topBar = { TopBar(title) })
     { innerPaddings ->
-        MainGraph(goToSignIn, navController, Modifier.padding(innerPaddings))
+        MainGraph(
+            rootNavController = rootNavController,
+            navController = navController,
+            modifier = Modifier.padding(innerPaddings)
+        )
     }
 }
 

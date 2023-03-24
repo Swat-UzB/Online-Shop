@@ -1,4 +1,4 @@
-package com.example.onlineshop.common.utils
+package com.example.books
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES

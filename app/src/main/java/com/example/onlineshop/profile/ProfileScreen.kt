@@ -38,7 +38,7 @@ import com.example.onlineshop.login.presentation.LoginViewModel
 
 @Composable
 fun ProfileScreen(
-    goToSignIn: () -> Unit,
+    rootNavController: NavController,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     Column(
@@ -91,7 +91,10 @@ fun ProfileScreen(
             label = R.string.log_out,
             isArrowExist = false,
             modifier = Modifier.clickable {
-                goToSignIn
+
+                rootNavController.navigate(Graph.ROOT) {
+                    popUpTo(Graph.ROOT)
+                }
                 viewModel.removeUserName()
             })
     }

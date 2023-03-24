@@ -45,20 +45,21 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginMainScreen(
     navController: NavController,
-    viewModel: LoginViewModel = hiltViewModel(),
-    scope: CoroutineScope = rememberCoroutineScope()
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
     var firstName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisibility by remember { mutableStateOf(false) }
     val focusManger = LocalFocusManager.current
-    val checkUser = { scope.launch { viewModel.isUserExist(firstName) } }
+    val checkUser = { viewModel.isUserExist(firstName) }
     val isFieldsNotBlank = password.isNotBlank() && firstName.isNotBlank()
-    if (state.isUserExist) {
-        with(navController) {
-            popBackStack()
-            navigate(Graph.MAIN)
+    LaunchedEffect(key1 = state.isUserExist) {
+        if (state.isUserExist) {
+            with(navController) {
+                popBackStack()
+                navigate(Graph.MAIN)
+            }
         }
     }
     Column(

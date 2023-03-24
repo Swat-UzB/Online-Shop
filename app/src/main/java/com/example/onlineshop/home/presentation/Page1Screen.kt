@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -30,7 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.onlineshop.R
 import com.example.onlineshop.common.presentation.EditField
 import com.example.onlineshop.common.presentation.model.UiFlashSaleProduct
@@ -41,6 +41,7 @@ import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.components.rememberImageComponent
 import com.skydoves.landscapist.glide.GlideImage
 import com.skydoves.landscapist.placeholder.shimmer.ShimmerPlugin
+import java.text.NumberFormat
 
 /**
  * Created by Zayniddinov Ilyosjon on 17/03/2023.
@@ -49,9 +50,8 @@ import com.skydoves.landscapist.placeholder.shimmer.ShimmerPlugin
 
 @Composable
 fun Page1MainScreen(
-    viewModel: HomeViewModel = hiltViewModel()
+    state: HomeViewState
 ) {
-    val state by viewModel.state.collectAsState()
     var search by remember { mutableStateOf("") }
     val focusManger = LocalFocusManager.current
     Column(
@@ -124,9 +124,21 @@ fun Page1MainScreen(
         }
         Spacer(modifier = Modifier.height(16.dp))
         ListName(listName = R.string.latest)
-        LazyRow { items(state.latestList) { LatestItem(it) } }
+        LazyRow {
+            items(state.latestList) {
+                LatestItem(
+                    it
+                )
+            }
+        }
         ListName(listName = R.string.flash_sale)
-        LazyRow { items(state.flashSaleList) { FlashSaleItem(it) } }
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            items(state.flashSaleList) {
+                FlashSaleItem(
+                    it
+                )
+            }
+        }
         ListName(listName = R.string.brands)
 
     }
@@ -137,7 +149,7 @@ fun Page1MainScreen(
 @Composable
 fun DefaultPreviewPage1() {
     OnlineShopTheme {
-        Page1MainScreen()
+        Page1MainScreen(HomeViewState())
     }
 }
 
@@ -176,15 +188,46 @@ fun FlashSaleItemPreview() {
 fun LatestItem(
     uiLatestProduct: UiLatestProduct, modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier.size(width = 120.dp, height = 150.dp))
-    {
+    Box(
+        modifier = modifier
+            .size(width = 130.dp, height = 150.dp)
+            .padding(start = 12.dp)
+    ) {
         CommonGlideImage(imageUrl = uiLatestProduct.imageUrl)
         Column(
+            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.Start,
             modifier = Modifier
+                .fillMaxHeight(0.5f)
                 .align(Alignment.BottomStart)
                 .padding(8.dp)
         ) {
+            Surface(
+                color = colorResource(id = R.color.category_back_color).copy(alpha = 0.85f), shape = MaterialTheme.shapes.large
+            ) {
+                CommonPoppinsText(
+                    fontSize = 8.sp,
+                    text = uiLatestProduct.category,
+                    fontWeight = FontWeight.W600,
+                    color = Color.Black,
+                    modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+                )
+            }
+
+            CommonPoppinsText(
+                text = uiLatestProduct.name,
+                color = Color.White,
+                maxLines = 2,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.W600
+            )
+            CommonPoppinsText(
+                text = "$ ${NumberFormat.getCurrencyInstance().format(uiLatestProduct.price)}",
+                color = Color.White,
+                maxLines = 1,
+                fontSize = 8.sp,
+                fontWeight = FontWeight.W600
+            )
 
         }
         Image(
@@ -205,29 +248,67 @@ fun LatestItem(
 fun FlashSaleItem(
     uiFlashSaleProduct: UiFlashSaleProduct, modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier.size(width = 180.dp, height = 220.dp))
-    {
-        Image(
-            Icons.Default.Add,
-            contentDescription = null,
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(4.dp)
-                .clip(CircleShape)
-                .background(colorResource(id = R.color.category_back))
-        )
+    Box(
+        modifier = modifier
+            .size(width = 200.dp, height = 220.dp)
+            .padding(start = 12.dp)
+    ) {
         CommonGlideImage(imageUrl = uiFlashSaleProduct.imageUrl)
-        Column(
-            horizontalAlignment = Alignment.Start,
+        Image(
+            painterResource(id = R.drawable.icon_1),
             modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(6.dp)
+                .padding(8.dp)
+                .align(Alignment.TopStart)
+                .clip(CircleShape),
+            contentDescription = null
+        )
+        Surface(
+            color = Color.Red, shape = MaterialTheme.shapes.large, modifier = Modifier
+                .padding(8.dp)
+                .align(Alignment.TopEnd)
         ) {
             CommonPoppinsText(
-                text = uiFlashSaleProduct.name, maxLines = 2, fontWeight = FontWeight.W600
+                text = "${uiFlashSaleProduct.discount}% off",
+                color = Color.White,
+                fontWeight = FontWeight.W600,
+                fontSize = 10.sp,
+                modifier = Modifier.padding(8.dp,2.dp)
+            )
+        }
+        Column(
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxHeight(0.5f)
+                .align(Alignment.BottomStart)
+                .padding(8.dp)
+        ) {
+            Surface(
+                color = colorResource(id = R.color.category_back_color).copy(alpha = 0.85f),
+                shape = MaterialTheme.shapes.large
+            ) {
+                CommonPoppinsText(
+                    text = uiFlashSaleProduct.category,
+                    fontWeight = FontWeight.W600,
+                    color = Color.Black,
+                    fontSize = 10.sp,
+                    modifier = Modifier.padding(vertical = 2.dp, horizontal = 6.dp)
+                )
+            }
+
+            CommonPoppinsText(
+                text = uiFlashSaleProduct.name,
+                color = Color.White,
+                maxLines = 2,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.W600
             )
             CommonPoppinsText(
-                text = "$ ${uiFlashSaleProduct.price}", maxLines = 2, fontWeight = FontWeight.W600
+                text = "$ ${NumberFormat.getCurrencyInstance().format(uiFlashSaleProduct.price)}",
+                color = Color.White,
+                maxLines = 1,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.W600
             )
 
         }
@@ -236,24 +317,23 @@ fun FlashSaleItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                Icons.Default.FavoriteBorder,
+                Icons.Filled.FavoriteBorder,
                 colorFilter = ColorFilter.tint(colorResource(id = R.color.icon_color)),
                 contentDescription = null,
                 modifier = Modifier
-                    .padding(4.dp)
                     .size(28.dp)
                     .clip(CircleShape)
                     .background(colorResource(id = R.color.category_back))
+                    .padding(6.dp)
             )
             Image(
-                Icons.Default.Add,
-                colorFilter = ColorFilter.tint(colorResource(id = R.color.icon_color)),
-                contentDescription = null,
-                modifier = Modifier
+                Icons.Default.Add, null,
+                Modifier
                     .padding(4.dp)
                     .size(36.dp)
                     .clip(CircleShape)
-                    .background(colorResource(id = R.color.category_back))
+                    .background(colorResource(id = R.color.category_back)),
+                colorFilter = ColorFilter.tint(colorResource(id = R.color.icon_color)),
             )
         }
 
@@ -274,17 +354,11 @@ fun ListName(
     ) {
 
         CommonPoppinsText(
-            text = stringResource(id = listName),
-            color = Color.Black,
-            fontWeight = FontWeight.W500,
-            modifier = Modifier.alignByBaseline()
+            stringResource(id = listName), Modifier.alignByBaseline(), FontWeight.W500, Color.Black,
         )
         CommonPoppinsText(
-            text = stringResource(id = R.string.view_all),
-            color = colorResource(id = R.color.text_gray),
-            fontWeight = FontWeight.W500,
-            fontSize = 12.sp,
-            modifier = Modifier.alignByBaseline()
+            stringResource(id = R.string.view_all), Modifier.alignByBaseline(),
+            FontWeight.W500, colorResource(id = R.color.text_gray), 12.sp,
         )
     }
 }
@@ -296,7 +370,8 @@ fun Category(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
             painter = painterResource(id = icon),
@@ -320,8 +395,8 @@ fun Category(
 @Composable
 fun CommonPoppinsText(
     text: String,
-    fontWeight: FontWeight,
     modifier: Modifier = Modifier,
+    fontWeight: FontWeight? = null,
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
     maxLines: Int = Int.MAX_VALUE,
@@ -339,18 +414,15 @@ fun CommonPoppinsText(
 
 @Composable
 fun CommonGlideImage(
-    imageUrl: String,
-    modifier: Modifier = Modifier
+    imageUrl: String, modifier: Modifier = Modifier
 ) {
-    GlideImage(
-        previewPlaceholder = R.drawable.ic_launcher_background,
+    GlideImage(previewPlaceholder = R.drawable.ic_launcher_background,
         modifier = modifier
             .fillMaxSize()
             .clip(MaterialTheme.shapes.large),
         imageModel = { imageUrl },
         imageOptions = ImageOptions(
-            contentScale = ContentScale.Crop,
-            alignment = Alignment.Center
+            contentScale = ContentScale.Crop, alignment = Alignment.Center
         ),
         component = rememberImageComponent {
             // shows a shimmering effect when loading an image.

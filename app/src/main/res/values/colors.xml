@@ -16,6 +16,8 @@
     <color name="icon_unselected">#909090</color>
     <color name="upload_icon_clr">#EAEAEA</color>
     <color name="error_color">#B00020</color>
+    <color name="category_back_color">#C4C4C4</color>
+    <color name="border_color">#B9B9B9</color>
 
 
 

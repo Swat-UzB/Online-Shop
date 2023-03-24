@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -39,7 +38,7 @@ class HomeViewModel @Inject constructor(
         loadInitialData()
     }
 
-  private fun loadInitialData() {
+    private fun loadInitialData() {
         val errorMessage = "Failed to load data"
         val exceptionHandler = viewModelScope.createExceptionHandler(errorMessage) {
             onFailure(it)
@@ -50,12 +49,10 @@ class HomeViewModel @Inject constructor(
             val flashSale = async { getFlashSaleProducts() }
             val latestList = latest.await()
             val flashSaleList = flashSale.await()
-//            val latestList = getLatestProducts()
             if (latestList.isNotEmpty() && flashSaleList.isNotEmpty()) {
                 _state.update { oldState ->
                     oldState.copy(latestList = latestList.map { uiLatestProductMapper.mapToUi(it) },
-                        flashSaleList = flashSaleList.map { uiFlashSaleProductMapper.mapToUi(it) }
-                    )
+                        flashSaleList = flashSaleList.map { uiFlashSaleProductMapper.mapToUi(it) })
                 }
             }
         }
@@ -67,6 +64,8 @@ class HomeViewModel @Inject constructor(
             oldState.copy(
                 failure = Event(failure)
             )
+
         }
     }
+
 }

@@ -8,16 +8,17 @@
 
     <application
         android:allowBackup="true"
-        android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:name=".OnlineShopApp"
+        android:hardwareAccelerated="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.OnlineShop"
         tools:targetApi="31">
         <activity
+            android:windowSoftInputMode="adjustResize"
             android:name=".common.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.OnlineShop">
