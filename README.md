@@ -4,9 +4,9 @@ This app is created in Jetpack compose.
 <table>
   <tr>
     <td>Sign In Page</td>
-     <td>Login</td>
-     <td>Present day in purple and selected day in pink</td>
-       <td>Present day in purple and selected day in pink</td>
+    <td>Login Page</td>
+    <td>Main Page </td>
+    <td>Profile Page</td>
   </tr>
   <tr>
     <td><img src="https://user-images.githubusercontent.com/61419443/227562949-6b7c70f8-9481-45ab-9558-1553a5f38a06.png" width=250 height=480></td>
